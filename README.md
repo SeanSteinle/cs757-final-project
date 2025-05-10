@@ -37,14 +37,27 @@ Why didn't we have the time? It's actually quite simple:
 
 ## Results
 
-- include lots of pictures as possible
-- compare and comment on results between 3 policies
-- consider
-    - real world performance
-    - dreaming performance
-        - dreaming performance at different temperatures
+To evaluate world models, we ran two experiments. First, we ran a small experiment via a Jupyter Notebook to verify that our architecture worked. Then we ran a larger experiment via Python scripts and the Hopper cluster to get a higher performant model. We compare these runs with a random policy and a PPO policy from StableBaselines3.
+
+### Small Run (Notebook Version)
+
+Our first run was on about 400 episodes (10,000 timesteps) of data. We trained the VAE for 20 epochs, the MDN-RNN for 10 epochs, and the controller for 10 epochs. We used a dimensionality of 32 for `z`. This allowed us to train each component in under a half hour, however the performance of the model was abysmal. In fact, a random policy did much better than our model. 
+
+On the bright side, we were able to reconstruct scenes based on our VAE's encodings, which was very interesting and illustrative. Additionally, this short run provides a 'sanity check' for users to test our implementation and their environment interactively.
+
+### Larger Run (Script Version)
+
+Our second fun was on about 10,000 episodes (250,000 timesteps) of data. We trained the VAE for 25 epochs, the MDN-RNN for 25 epochs, and the controller for 25 epochs. We used a dimensionality of 32 for `z`. This took significantly more time (about 6-8 hours total), especially because Hopper did not offer us GPU access even over the span of several days.
+
+- specs
+- performed better than random, but not better than ppo
+    - show performance graph of reward comparing all 3 policies
+    - show reconstructed observations from large policy
+- goes to show just how much computation world models require -- not something you can do without a GPU
 
 ## Conclusion
 
-- intro but add results
+- world models can be simplified, though they are quite costly
+- world models are a good fit to solve mujoco given it's high cost of simulation and dimensionality
+- while we did not have the resources or time to fully realize this project, we showed the promise of world models for solving complex rl environments.
 
