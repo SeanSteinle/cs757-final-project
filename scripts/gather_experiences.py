@@ -31,5 +31,5 @@ def collect_rollout_data(env_name: str, out_dir: str, n_timesteps: int=10000, pr
     return np_obs, np_rewards, np_actions, np_done
 
 if __name__ == "__main__":
-    out_dir, n_timesteps, print_n_episodes = "../data/processed/", 1000000, 1000
+    out_dir, n_timesteps, print_n_episodes = "../data/processed/", 500000, 1000
     collect_rollout_data('Humanoid-v5', out_dir, n_timesteps, print_n_episodes)

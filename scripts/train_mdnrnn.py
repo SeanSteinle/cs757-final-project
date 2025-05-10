@@ -160,7 +160,7 @@ def preprocess_data(observations, actions, rewards, dones, sequence_length):
 
 if __name__ == "__main__":
     #parameters for extracting z values
-    experiment_id = "Humanoid-v5_10000"
+    experiment_id = "Humanoid-v5_500000"
     obs_path = "../data/processed/{}/observations.npy".format(experiment_id)
     vae_path = "../models/vae/{}.weights.h5".format(experiment_id)
     z_path = "../data/processed/{}/z.npy".format(experiment_id)
@@ -184,7 +184,7 @@ if __name__ == "__main__":
     SEQ_LEN = 10 #number of samples to process at a time, 'context' of RNN
     A_DIM = actions.shape[1] #dimensionality of action space
     batch_size = 32
-    EPOCHS = 5
+    EPOCHS = 100
 
     train_dataset = tf.data.Dataset.from_generator(
         lambda: preprocess_data(z, actions, rewards, done, SEQ_LEN),

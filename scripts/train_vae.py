@@ -79,10 +79,11 @@ def train_vae(model, dataset, epochs=10, learning_rate=1e-4):
 
 if __name__ == "__main__":
     #parameters
-    experiment_id = "Humanoid-v5_10000"
+    experiment_id = "Humanoid-v5_500000"
     save_path = f"../models/vae/{experiment_id}.weights.h5"
     observations_path = f"../data/processed/{experiment_id}/observations.npy"
     Z_DIM = 32
+    VAE_EPOCHS = 25
 
     #load data
     x_train = np.load(observations_path)
@@ -94,7 +95,7 @@ if __name__ == "__main__":
 
     #instantiate and train model
     vae = MLPVAE(input_dim=X_DIM, z_size=Z_DIM)
-    train_vae(vae, dataset, epochs=20)
+    train_vae(vae, dataset, epochs=VAE_EPOCHS)
 
     #save out model
     vae.save_weights(save_path)
