@@ -3,9 +3,10 @@
 
 This repository contains the final project for the George Mason course CS757, Deep Generative Models.
 
-## Directory Breakdown
+## Directory Breakdown and Package Details
 
 - explain the contents of our directory!
+- make a note about pkg installs!
 
 ## Introduction
 

@@ -82,16 +82,18 @@ if __name__ == "__main__":
     experiment_id = "Humanoid-v5_10000"
     save_path = f"../models/vae/{experiment_id}.weights.h5"
     observations_path = f"../data/processed/{experiment_id}/observations.npy"
+    Z_DIM = 32
 
     #load data
     x_train = np.load(observations_path)
+    X_DIM = x_train.shape[1]
 
     #standardize data and create dataset
     x_train = (x_train - np.mean(x_train, axis=0)) / (np.std(x_train, axis=0) + 1e-6)
     dataset = create_dataset(x_train, batch_size=64)
 
     #instantiate and train model
-    vae = MLPVAE(input_dim=348, z_size=32)
+    vae = MLPVAE(input_dim=X_DIM, z_size=Z_DIM)
     train_vae(vae, dataset, epochs=20)
 
     #save out model
