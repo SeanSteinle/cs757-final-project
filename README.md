@@ -47,17 +47,21 @@ On the bright side, we were able to reconstruct scenes based on our VAE's encodi
 
 ### Larger Run (Script Version)
 
-Our second fun was on about 10,000 episodes (250,000 timesteps) of data. We trained the VAE for 25 epochs, the MDN-RNN for 25 epochs, and the controller for 25 epochs. We used a dimensionality of 32 for `z`. This took significantly more time (about 6-8 hours total), especially because Hopper did not offer us GPU access even over the span of several days.
+Our second run was on about 10,000 episodes (250,000 timesteps) of data. We trained the VAE for 25 epochs, the MDN-RNN for 25 epochs, and the controller for 100 epochs. We used a dimensionality of 32 for `z`. This took significantly more time (about 6-8 hours total), especially because Hopper did not offer us GPU access even over the span of several days. The VAE and controller were both fairly quick to train, but each epoch of the MDN-RNN took quite a lot of compute (~15 minutes on our setup).
 
-- specs
-- performed better than random, but not better than ppo
-    - show performance graph of reward comparing all 3 policies
-    - show reconstructed observations from large policy
-- goes to show just how much computation world models require -- not something you can do without a GPU
+Unfortunately, this run did not produce a broadly successful policy. The average reward of the random and PPO policies were about 4.7 per step whereas the world model was only 3.5 per step. Obviously sub-random performance is poor, but given that the PPO policy only performs equal to the random policy shows just how computationally expensive this problem is to solve -- it's clear we didn't train the PPO long enough and we let it train for over an hour.
+
+Despite its poor overall performance, there is some reason for optimism with the world model. Whereas the random policy doesn't seem to have any sustained momentum in gathering reward over sequences of timesteps, both the world model and PPO policies do. Additionally, even thoguh the world model policy has a 'resting reward' that is subrandom, when it gets onto a learning trajectory it matches the performance of PPO. We interpret this as evidence of the fragility of world models: the architecture contains a powerful design, but large amounts of training are needed to align the disparate components.
+
+![Sequential Rewards](doc/plots/sequential_rewards.png)
+
+![Cumulative Rewards](doc/plots/cumulative_rewards.png)
+
+### Visualization
+
+Although we weren't able to implement in-dream training, we did take a stab at rendering 'dreams' from the world model. This required back-transforming the latent space for a slice of our collect observations, then forcing the MuJoCo environment to render them. Unfortunately, we found that MuJoCo cannot directly render observations well -- instead, MuJoCo applies some black box of transformations to create a renderable 'state'. Attempting to render observations directly results in an incredibly unstable visualization, but we tried anyway! In the `doc/videos/` directory you can find a video which was rendered from true state (`true_state.mp4`), a video which was rendered from true observations (`true_obs.mp4`), and a video which was rendered from sampled and back-transformed latent observations (`reconstr_obs.mp4`). If you squint, you can tell that there is loss between the latter two videos, and that the 'dream' is more sporadic than the original observations.
 
 ## Conclusion
 
-- world models can be simplified, though they are quite costly
-- world models are a good fit to solve mujoco given it's high cost of simulation and dimensionality
-- while we did not have the resources or time to fully realize this project, we showed the promise of world models for solving complex rl environments.
+World models are an innovative technique that integrates the power of generative models to unlock more broadly understanding agents. Unfortunately, we found that the complex nature of world model design can be a huge inhibitor to training successful models, primarily due to the computational cost of training the MDN-RNN. However, this work showed the promise of world models to improve on classical RL techniques in physics-based tasks like those of the MuJoCo environment.
 
